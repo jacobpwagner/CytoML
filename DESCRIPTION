@@ -57,6 +57,7 @@ Collate:
     'cytobank2GatingSet.R'
     'cytobankExperiment.R'
     'flowJoWorkspace_Methods.R'
+    'flowJoWorkspace_Methods_new.R'
     'diva2GatingSet.R'
     'flowUtils_functions.R'
     'gatingML.R'

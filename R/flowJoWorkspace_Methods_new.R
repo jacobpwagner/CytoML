@@ -1,0 +1,1 @@
+get_xml_file_path_new <- function(ws) .Call(get_xml_file_path_new_, ws)

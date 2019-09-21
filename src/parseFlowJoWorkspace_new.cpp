@@ -58,4 +58,15 @@ extern "C"{
     }
   }
   
+  SEXP open_workspace_new_(SEXP filename_, SEXP sample_name_location_, SEXP xmlParserOption_){
+    try{
+      unique_ptr<flowJoWorkspace> ws = openWorkspace(CHAR(Rf_asChar(filename_)),
+                                                     static_cast<SAMPLE_NAME_LOCATION>(Rf_asInteger(sample_name_location_)),
+                                                     Rf_asInteger(xmlParserOption_));
+      return R_MakeExternalPtr(reinterpret_cast<void*>(ws.release()), R_NilValue, R_NilValue); 
+    }catch(std::exception& e){
+      Rf_error(e.what());
+    }
+  }
+  
 }

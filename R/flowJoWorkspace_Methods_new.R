@@ -8,6 +8,7 @@ open_workspace_new <- function(filename, sample_name_location, xmlParserOption) 
 
 get_sample_groups_new <- function(ws) .Call(get_sample_groups_new_, ws)
 
+get_samples_new <- function(ws) .Call(get_samples_new_, ws)
 
 open_flowjo_xml_new <- function(file,options = 0, sampNloc = "keyword"){
   valid_values <- c("keyword", "sampleNode")
@@ -26,4 +27,15 @@ fj_ws_get_sample_groups_new <- function(x){
   df <- do.call(rbind, df)
   colnames(df) <-  c("groupName", "groupID", "sampleID")
   df
+}
+
+fj_ws_get_samples_new <- function(x, group_id = NULL)
+{
+  res <- get_samples_new(x@doc)
+  if(!is.null(group_id))
+    res <- res[group_id]
+  res <- unlist(res, recursive = FALSE)
+  res <- lapply(res, as.data.frame, stringsAsFactors = FALSE)
+  res <- do.call(rbind, res)
+  unique(res)
 }

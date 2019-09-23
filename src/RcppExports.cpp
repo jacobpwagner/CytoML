@@ -123,6 +123,7 @@ END_RCPP
 
 RcppExport SEXP get_keywords_by_id_new_(SEXP, SEXP);
 RcppExport SEXP get_keywords_by_name_new_(SEXP, SEXP);
+RcppExport SEXP get_sample_groups_new_(SEXP);
 RcppExport SEXP get_xml_file_path_new_(SEXP);
 RcppExport SEXP open_workspace_new_(SEXP, SEXP, SEXP);
 
@@ -137,6 +138,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cytoml2_get_xml_file_path", (DL_FUNC) &_cytoml2_get_xml_file_path, 1},
     {"get_keywords_by_id_new_",   (DL_FUNC) &get_keywords_by_id_new_,   2},
     {"get_keywords_by_name_new_", (DL_FUNC) &get_keywords_by_name_new_, 2},
+    {"get_sample_groups_new_",    (DL_FUNC) &get_sample_groups_new_,    1},
     {"get_xml_file_path_new_",    (DL_FUNC) &get_xml_file_path_new_,    1},
     {"open_workspace_new_",       (DL_FUNC) &open_workspace_new_,       3},
     {NULL, NULL, 0}

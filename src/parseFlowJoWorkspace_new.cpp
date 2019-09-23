@@ -69,4 +69,38 @@ extern "C"{
     }
   }
   
+  SEXP get_sample_groups_new_(SEXP ws_){
+    try{
+      flowJoWorkspace* ws_ptr =  reinterpret_cast<flowJoWorkspace*>(R_ExternalPtrAddr(ws_));
+      vector<SampleGroup> groups = ws_ptr->get_sample_groups();
+      int nGroup = groups.size();
+      SEXP group_ids = PROTECT(Rf_allocVector(INTSXP, nGroup));
+      SEXP group_names = PROTECT(Rf_allocVector(STRSXP, nGroup));
+      SEXP sample_ids = PROTECT(Rf_allocVector(VECSXP, nGroup));
+      for(int i = 0; i < nGroup; i++)
+      {
+        INTEGER(group_ids)[i] = i;
+        SET_STRING_ELT(group_names, i, Rf_mkChar(groups[i].group_name.c_str()));
+        int nSample = groups[i].sample_ids.size();
+        SEXP sample_id_vec = PROTECT(Rf_allocVector(INTSXP, nSample));
+        for(int j = 0; j < nSample; j++)
+          INTEGER(sample_id_vec)[j] = groups[i].sample_ids[j];
+        SET_VECTOR_ELT(sample_ids, i, sample_id_vec);
+      }
+      SEXP list_out = PROTECT(Rf_allocVector(VECSXP, 3));
+      SET_VECTOR_ELT(list_out, 0, group_ids);
+      SET_VECTOR_ELT(list_out, 1, group_names);
+      SET_VECTOR_ELT(list_out, 2, sample_ids);
+      SEXP list_names = PROTECT(Rf_allocVector(STRSXP, 3));
+      SET_STRING_ELT(list_names, 0, Rf_mkChar("groupID"));
+      SET_STRING_ELT(list_names, 1, Rf_mkChar("groupName"));
+      SET_STRING_ELT(list_names, 2, Rf_mkChar("sampleID"));
+      Rf_namesgets(list_out, list_names);
+      UNPROTECT(nGroup + 5);
+      return list_out;
+    }catch(std::exception& e){
+      Rf_error(e.what());
+    }
+  }
+  
 }

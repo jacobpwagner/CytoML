@@ -6,6 +6,8 @@ get_keywords_by_name_new <- function(ws, sample_name) .Call(get_keywords_by_name
 
 open_workspace_new <- function(filename, sample_name_location, xmlParserOption) .Call(open_workspace_new_, filename, sample_name_location, xmlParserOption)
 
+get_sample_groups_new <- function(ws) .Call(get_sample_groups_new_, ws)
+
 
 open_flowjo_xml_new <- function(file,options = 0, sampNloc = "keyword"){
   valid_values <- c("keyword", "sampleNode")
@@ -13,4 +15,15 @@ open_flowjo_xml_new <- function(file,options = 0, sampNloc = "keyword"){
   file <- path.expand(file)
   new("flowjo_workspace", doc = open_workspace_new(file, sample_name_location = match(sampNloc,valid_values), xmlParserOption = options))
   
+}
+
+fj_ws_get_sample_groups_new <- function(x){
+  res <- get_sample_groups_new(x@doc)
+  df <- mapply(res[["groupName"]], res[["groupID"]], res[["sampleID"]]
+               , FUN = function(x, y, z){
+                 data.frame(x,y,z)                            
+               }, SIMPLIFY = FALSE, USE.NAMES = FALSE)
+  df <- do.call(rbind, df)
+  colnames(df) <-  c("groupName", "groupID", "sampleID")
+  df
 }

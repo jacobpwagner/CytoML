@@ -147,6 +147,7 @@ parse.gateInfo <- function(file, ...)
 
 
                 id <- xmlGetAttr(node, "id")
+                group_id <- ""
 
                 name <- getCustomNodeInfo(node, "name")
                 fcs_file_filename <- getCustomNodeInfo(node, "fcs_file_filename")
@@ -165,6 +166,7 @@ parse.gateInfo <- function(file, ...)
                     dimTag <- "divider"
                     #update id with quardant definition
                     quadrantList <- xmlElementsByTagName(node, "Quadrant")
+                    group_id <- id
                     id <- unname(sapply(quadrantList, function(i)xmlGetAttr(i, "id")))
 
                   }else
@@ -183,7 +185,7 @@ parse.gateInfo <- function(file, ...)
                 }
                 # message(name)
                 # browser()
-                data.table(id = id, name = name, gate_id = gate_id, fcs = fcs_file_filename, fcs_file_id = fcs_file_id
+                data.table(id = id, name = name, gate_id = gate_id, group_id = group_id, fcs = fcs_file_filename, fcs_file_id = fcs_file_id
                   , comp_ref = comp_ref, trans_ref = trans_ref, params = params, gate_def = gate_def
                   )
 
@@ -402,6 +404,7 @@ addGate <- function(gateInfo,flowEnv, g, popId, gateID){
 
   rownames(bound) <- as.vector(parameters(gate))
   nodeData(g, popId, "gateInfo") <- list(list(gate = gate
+                                              , group_id = sb[, group_id]
                                               , gateName = sb[, name]
                                               , tailored_gate = list(gateid_vs_gate = tg
                                                                      , file_vs_gateid = c(fcs_vs_gateid, fileid_vs_gateid)

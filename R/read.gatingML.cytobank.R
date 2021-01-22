@@ -402,9 +402,31 @@ addGate <- function(gateInfo,flowEnv, g, popId, gateID){
       cytobank_gate_def[["scale"]][[axis]][c("min", "max")]
     }))
 
+  group_info <- list()
+  # Quad gate case
+  if(length(sb[,group_id]) > 0 && is(gate, "rectangleGate") && length(gate@max) == 2){
+    # Determine quadrant number starting from upper left and
+    # proceeding clockwise
+    quadrant_number <- ""
+    positive_side <- is.infinite(gate@max)
+    if(positive_side[1]) {
+      if(positive_side[2]) {
+        group_info$quadrant_number <- 2
+      } else {
+        group_info$quadrant_number <- 3
+      }
+    } else {
+      if(positive_side[2]) {
+        group_info$quadrant_number <- 1
+      } else {
+        group_info$quadrant_number <- 4
+      }
+    }
+    group_info$group_id <- sb[, group_id]
+  }
   rownames(bound) <- as.vector(parameters(gate))
   nodeData(g, popId, "gateInfo") <- list(list(gate = gate
-                                              , group_id = sb[, group_id]
+                                              , group_info = group_info
                                               , gateName = sb[, name]
                                               , tailored_gate = list(gateid_vs_gate = tg
                                                                      , file_vs_gateid = c(fcs_vs_gateid, fileid_vs_gateid)
